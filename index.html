@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet 地图库 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* ========================================
            QUACK DESIGN 风格指南 - CSS Variables
@@ -1649,125 +1652,36 @@
 
                         <div class="map-container">
                             <div class="map-header">
-                                <span class="map-title">🗺️ 配送地图 - 福州鼓楼区</span>
+                                <span class="map-title">🗺️ 配送地图 - 福建理工大学</span>
                                 <div class="map-tools">
-                                    <button class="btn btn-sm" onclick="centerMap()">居中</button>
-                                    <button class="btn btn-sm" onclick="togglePath()">显示路径</button>
+                                    <button class="btn btn-sm btn-primary" onclick="calculateRoute()">计算路线</button>
+                                    <button class="btn btn-sm" onclick="resetMapView()">重置</button>
                                 </div>
                             </div>
-                            <div class="map-viewport" id="mapViewport">
-                                <div class="map-content" id="mapContent">
-                                    <!-- Map markers with pixel icons -->
-                                    <div class="map-marker delivery" style="left: 450px; top: 350px;" title="配送员">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
-                                    </div>
-                                    <div class="map-marker restaurant" style="left: 280px; top: 380px;" title="麦当劳 东街口店">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
-                                    </div>
-                                    <div class="map-marker restaurant" style="left: 650px; top: 280px;" title="绿茶餐厅 东百店">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
-                                    </div>
-                                    <div class="map-marker restaurant" style="left: 180px; top: 500px;" title="星巴克 冠亚店">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
-                                    </div>
-                                    <div class="map-marker customer" style="left: 720px; top: 320px;" title="客户 三坊七巷">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
-                                    </div>
-                                    <div class="map-marker customer" style="left: 850px; top: 420px;" title="客户 国贸中心">
-                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
-                                            <div class="n n r r r r n n"></div>
-                                            <div class="n r r r r r r n"></div>
-                                            <div class="r r r r r r r r"></div>
-                                            <div class="r r w w w w r r"></div>
-                                            <div class="b b b b b b b b"></div>
-                                            <div class="n n n n n n n n"></div>
-                                        </div>
+                            <div id="realMap" style="height: 500px; width: 100%; border: 2px solid var(--border); border-radius: var(--radius-large);"></div>
+                            <div class="map-info" style="margin-top: 16px;">
+                                <div class="map-info-row">
+                                    <div class="map-info-item">
+                                        <span>📍</span>
+                                        <span>当前位置: <span id="deliveryLocation">福建理工大学</span></span>
                                     </div>
                                 </div>
-
-                                <div class="map-legend">
-                                    <div class="map-legend-item">
-                                        <div class="map-legend-icon" style="background: var(--primary);">
-                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
-                                                <div class="n r r r n"></div>
-                                                <div class="r r r r r"></div>
-                                                <div class="r w w r r"></div>
-                                            </div>
-                                        </div>
-                                        <span>配送员</span>
-                                    </div>
-                                    <div class="map-legend-item">
-                                        <div class="map-legend-icon" style="background: var(--secondary);">
-                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
-                                                <div class="n r r r n"></div>
-                                                <div class="r r r r r"></div>
-                                                <div class="r w w r r"></div>
-                                            </div>
-                                        </div>
-                                        <span>餐厅</span>
-                                    </div>
-                                    <div class="map-legend-item">
-                                        <div class="map-legend-icon" style="background: var(--accent);">
-                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
-                                                <div class="n r r r n"></div>
-                                                <div class="r r r r r"></div>
-                                                <div class="r w w r r"></div>
-                                            </div>
-                                        </div>
-                                        <span>客户</span>
+                                <div class="map-info-row" style="margin-top: 8px;">
+                                    <div class="map-info-item">
+                                        <span>🏪</span>
+                                        <span>最近商家: <span id="nearestRestaurant">点击计算路线</span></span>
                                     </div>
                                 </div>
-
-                                <div class="map-zoom-controls">
-                                    <button class="map-zoom-btn" onclick="zoomIn()">+</button>
-                                    <button class="map-zoom-btn" onclick="zoomOut()">−</button>
+                                <div class="map-info-row" style="margin-top: 8px;">
+                                    <div class="map-info-item">
+                                        <span>🏢</span>
+                                        <span>最近客户: <span id="nearestCustomer">--</span></span>
+                                    </div>
                                 </div>
-
-                                <div class="map-info">
-                                    <div class="map-info-row">
-                                        <div class="map-info-item">
-                                            <span>📍</span>
-                                            <span>当前位置: 福州·鼓楼区</span>
-                                        </div>
-                                        <div class="map-info-item">
-                                            <span>🧭</span>
-                                            <span>缩放: <span id="zoomLevel">100%</span></span>
-                                        </div>
+                                <div class="map-info-row" style="margin-top: 8px;">
+                                    <div class="map-info-item">
+                                        <span>📏</span>
+                                        <span>总距离: <span id="totalDistance">--</span></span>
                                     </div>
                                 </div>
                             </div>
@@ -1791,6 +1705,168 @@
         let tempUpdateInterval = null;
         let tempData = [];
         let humidityData = [];
+
+        // ========================================
+        // 真实地图 - Leaflet
+        // ========================================
+        let map = null;
+        let deliveryMarker = null;
+        let restaurantMarkers = [];
+        let customerMarkers = [];
+        let routeLine = null;
+
+        // 福建理工大学坐标
+        const FUZHOU_CENTER = [26.1167, 119.2833];
+        const deliveryPersonLocation = [26.1167, 119.2833];
+
+        // 商家位置 - 福建理工大学周边
+        const restaurants = [
+            { name: '麦当劳 理工大学店', location: [26.1155, 119.2810], address: '福州·大学城 理工大学南门' },
+            { name: '沙县小吃', location: [26.1180, 119.2850], address: '福州·大学城 商业街' },
+            { name: '兰州拉面', location: [26.1145, 119.2805], address: '福州·大学城 学生街' }
+        ];
+
+        // 客户位置 - 福建理工大学学生宿舍
+        const customers = [
+            { name: '学生宿舍 梅园', location: [26.1175, 119.2860], address: '福州·大学城 福建理工大学梅园' },
+            { name: '学生宿舍 槐园', location: [26.1158, 119.2795], address: '福州·大学城 福建理工大学槐园' }
+        ];
+
+        // 初始化真实地图
+        function initRealMap() {
+            if (map) return;
+
+            map = L.map('realMap').setView(FUZHOU_CENTER, 16);
+
+            // OpenStreetMap 瓦片
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // 自定义图标
+            const deliveryIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="width:32px;height:32px;background:#FF8C42;border:2px solid #1A1A1A;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:2px 2px 0 rgba(0,0,0,0.3);">🚴</div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            const restaurantIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="width:32px;height:32px;background:#66C2FF;border:2px solid #1A1A1A;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:2px 2px 0 rgba(0,0,0,0.3);">🏪</div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            const customerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="width:32px;height:32px;background:#FFD700;border:2px solid #1A1A1A;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:2px 2px 0 rgba(0,0,0,0.3);">🏢</div>',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            // 配送员标记
+            deliveryMarker = L.marker(deliveryPersonLocation, { icon: deliveryIcon, draggable: true })
+                .addTo(map)
+                .bindPopup('<b>配送员 张小明</b><br>工号: QUACK-2024-886')
+                .openPopup();
+
+            deliveryMarker.on('dragend', function(e) {
+                const pos = e.target.getLatLng();
+                document.getElementById('deliveryLocation').textContent =
+                    `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
+                calculateRoute();
+            });
+
+            // 商家标记
+            restaurants.forEach(r => {
+                const marker = L.marker(r.location, { icon: restaurantIcon })
+                    .addTo(map)
+                    .bindPopup(`<b>${r.name}</b><br>${r.address}`);
+                restaurantMarkers.push({ ...r, marker });
+            });
+
+            // 客户标记
+            customers.forEach(c => {
+                const marker = L.marker(c.location, { icon: customerIcon })
+                    .addTo(map)
+                    .bindPopup(`<b>${c.name}</b><br>${c.address}`);
+                customerMarkers.push({ ...c, marker });
+            });
+
+            console.log('地图初始化完成');
+        }
+
+        // 计算两点间直线距离
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        // 计算并显示路线
+        function calculateRoute() {
+            if (!map) return;
+
+            const pos = deliveryMarker.getLatLng();
+
+            // 找最近商家
+            let nearestR = null, minRDist = Infinity;
+            restaurantMarkers.forEach(r => {
+                const d = getDistance(pos.lat, pos.lng, r.location[0], r.location[1]);
+                if (d < minRDist) { minRDist = d; nearestR = r; }
+            });
+
+            // 找最近客户
+            let nearestC = null, minCDist = Infinity;
+            customerMarkers.forEach(c => {
+                const d = getDistance(pos.lat, pos.lng, c.location[0], c.location[1]);
+                if (d < minCDist) { minCDist = d; nearestC = c; }
+            });
+
+            // 更新界面
+            document.getElementById('nearestRestaurant').textContent =
+                nearestR ? `${nearestR.name} (${minRDist.toFixed(2)}km)` : '无';
+            document.getElementById('nearestCustomer').textContent =
+                nearestC ? `${nearestC.name} (${minCDist.toFixed(2)}km)` : '无';
+
+            if (!nearestR || !nearestC) return;
+
+            // 画路线
+            if (routeLine) map.removeLayer(routeLine);
+
+            routeLine = L.polyline([
+                [pos.lat, pos.lng],
+                nearestR.location,
+                nearestC.location
+            ], {
+                color: '#FF8C42',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '10, 10'
+            }).addTo(map);
+
+            // 总距离
+            const total = minRDist + minCDist;
+            document.getElementById('totalDistance').textContent =
+                `${total.toFixed(2)}km (直线距离)`;
+        }
+
+        // 重置地图
+        function resetMapView() {
+            if (!map) return;
+            map.setView(FUZHOU_CENTER, 16);
+            deliveryMarker.setLatLng(deliveryPersonLocation);
+            document.getElementById('deliveryLocation').textContent = '福建理工大学';
+            document.getElementById('nearestRestaurant').textContent = '点击计算路线';
+            document.getElementById('nearestCustomer').textContent = '--';
+            document.getElementById('totalDistance').textContent = '--';
+            if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+        }
 
         // ========================================
         // 温度曲线 API 接口占位 (后期接入)
@@ -1878,6 +1954,11 @@
                     setTimeout(drawTemperatureChart, 100);
                 } else {
                     stopTemperatureMonitor();
+                }
+
+                // 地图页面 - 延迟初始化地图
+                if (page === 'map') {
+                    setTimeout(initRealMap, 100);
                 }
             });
         });
