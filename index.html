@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能外卖箱 - Quack Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           QUACK DESIGN 风格指南 - CSS Variables
+           ======================================== */
+        :root {
+            /* 配色方案 */
+            --primary: #FF8C42;      /* MotherDuck Orange - 品牌标识、关键行动点 */
+            --secondary: #66C2FF;    /* Sky Blue - 次要行动按钮、信息提示 */
+            --accent: #FFD700;       /* Bright Yellow - 顶通提示、重要告警 */
+            --background: #F5F2ED;   /* Cream White - 主背景 */
+            --foreground: #333333;   /* Deep Charcoal - 文字色 */
+            --border: #1A1A1A;       /* Technical Black - 2px实线边框核心 */
+            --card: #FFFFFF;         /* 卡片背景 */
+            --muted: #E8E4DD;       /* 柔和灰 */
+
+            /* 字体排版 */
+            --font-heading: 'Space Grotesk', sans-serif;  /* 未来感技术无衬线 */
+            --font-body: 'Inter', sans-serif;              /* 舒适阅读 */
+            --font-mono: 'JetBrains Mono', monospace;      /* SQL/参数展示 */
+
+            /* 间距系统 - 8px基础 */
+            --space-xs: 4px;
+            --space-s: 8px;
+            --space-m: 16px;
+            --space-l: 24px;
+            --space-xl: 32px;
+            --space-xxl: 64px;
+
+            /* 圆角半径 */
+            --radius-base: 4px;   /* 按钮、输入框、小卡片 */
+            --radius-large: 8px;  /* 模态框、主内容容器 */
+
+            /* 2D硬阴影 */
+            --shadow-hard: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+            --shadow-hard-sm: 2px 2px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        /* Reset & Base */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; overflow-x: hidden; }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--foreground);
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1152px; margin: 0 auto; padding: 0 var(--space-xl); }
+        .page-wrapper { padding: var(--space-l) 0; }
+
+        /* ========================================
+           CHUNKY PIXEL ART - 简约线条画风格 (2px粗线条)
+           ======================================== */
+        .pixel-art {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* 外卖箱像素图标 - 8x6 简约线条 */
+        .pixel-box-icon {
+            display: grid;
+            grid-template-columns: repeat(8, var(--pixel-size, 4px));
+            grid-template-rows: repeat(6, var(--pixel-size, 4px));
+            gap: 1px;
+        }
+
+        .pixel-box-icon .p { background: var(--primary); }
+        .pixel-box-icon .d { background: var(--foreground); }
+        .pixel-box-icon .g { background: var(--accent); }
+        .pixel-box-icon .w { background: var(--card); }
+        .pixel-box-icon .b { background: transparent; }
+
+        /* 大号像素外卖箱 - 登录页展示 */
+        .pixel-box-large {
+            display: grid;
+            grid-template-columns: repeat(16, 10px);
+            grid-template-rows: repeat(14, 10px);
+            gap: 2px;
+        }
+
+        .pixel-box-large .p { background: var(--primary); }
+        .pixel-box-large .d { background: var(--foreground); }
+        .pixel-box-large .g { background: var(--accent); }
+        .pixel-box-large .w { background: #FFE4C4; }
+        .pixel-box-large .b { background: transparent; }
+
+        /* 像素装饰块 - 几何图形点缀 */
+        .pixel-block {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border: 4px solid var(--border);
+        }
+
+        .pixel-block.blue { background: var(--secondary); }
+        .pixel-block.yellow { background: var(--accent); }
+
+        /* 像素金币 */
+        .pixel-coin {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border: 4px solid var(--border);
+            border-radius: 50%;
+        }
+
+        /* 像素相机图标 */
+        .pixel-camera {
+            display: grid;
+            grid-template-columns: repeat(10, 4px);
+            grid-template-rows: repeat(7, 4px);
+            gap: 1px;
+        }
+
+        .pixel-camera .g { background: #4A4A4A; }
+        .pixel-camera .l { background: #222; }
+        .pixel-camera .c { background: var(--secondary); }
+        .pixel-camera .y { background: var(--accent); }
+        .pixel-camera .n { background: transparent; }
+
+        /* 像素温度计 */
+        .pixel-thermometer {
+            display: grid;
+            grid-template-columns: repeat(5, 4px);
+            grid-template-rows: repeat(10, 4px);
+            gap: 1px;
+        }
+
+        .pixel-thermometer .w { background: var(--card); border: 1px solid var(--border); }
+        .pixel-thermometer .r { background: var(--primary); }
+        .pixel-thermometer .n { background: transparent; }
+
+        /* 像素地图 */
+        .pixel-map-icon {
+            display: grid;
+            grid-template-columns: repeat(8, 4px);
+            grid-template-rows: repeat(7, 4px);
+            gap: 1px;
+        }
+
+        .pixel-map-icon .b { background: var(--secondary); }
+        .pixel-map-icon .r { background: var(--primary); }
+        .pixel-map-icon .n { background: transparent; }
+
+        /* ========================================
+           LOGIN PAGE - 双栏分割布局
+           左侧: 品牌插画展示区 (Cream White)
+           右侧: 表单操作区 (纯白)
+           ======================================== */
+        .login-page {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .login-left {
+            width: 50%;
+            height: 100%;
+            background: var(--background);  /* Cream White */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px solid var(--border);  /* 核心2px实线边框 */
+        }
+
+        .login-right {
+            width: 50%;
+            height: 100%;
+            background: var(--card);  /* 纯白 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-title {
+            font-family: var(--font-heading);
+            font-size: 24px;  /* H2 规格 */
+            font-weight: 700;
+            margin-bottom: var(--space-l);  /* L: 24px 间距 */
+            color: var(--foreground);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-m);  /* M: 16px */
+            width: 320px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);  /* XS: 4px */
+        }
+
+        .form-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666666;
+        }
+
+        /* 表单输入框 - 2px黑色实线边框，4px圆角 */
+        .form-input {
+            padding: var(--space-s) var(--space-m);  /* S: 8px, M: 16px */
+            font-family: var(--font-body);
+            font-size: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);  /* 4px */
+            background: var(--card);
+            color: var(--foreground);
+            transition: all 0.2s ease-out;
+        }
+
+        /* 聚焦状态: 边框变Orange + 硬阴影 */
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);  /* MotherDuck Orange */
+            box-shadow: var(--shadow-hard-sm);  /* 2px 2px 硬阴影 */
+        }
+
+        .form-input::placeholder { color: #999999; }
+
+        .pixel-deco {
+            display: flex;
+            gap: var(--space-m);  /* M: 16px */
+            margin-top: var(--space-l);  /* L: 24px */
+        }
+
+        .login-brand {
+            margin-top: var(--space-l);  /* L: 24px */
+            text-align: center;
+        }
+
+        .login-brand h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: var(--space-s);  /* S: 8px */
+            color: var(--foreground);
+        }
+
+        .login-brand p {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #666666;
+        }
+
+        /* ========================================
+           BUTTONS - 2px黑色实线边框，hover偏移
+           ======================================== */
+        .btn {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            padding: var(--space-s) var(--space-l);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            background: var(--card);
+            color: var(--foreground);
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-s);
+            box-shadow: var(--shadow-hard-sm);
+        }
+
+        .btn:hover { transform: translate(2px, 2px); box-shadow: none; }
+        .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+
+        .btn-sm { padding: var(--space-xs) var(--space-m); font-size: 12px; }
+        .btn-lg { padding: var(--space-m) var(--space-l); font-size: 16px; }
+
+        /* 主要按钮: Orange填充 + Black边框 */
+        .btn-primary { background: var(--primary); color: var(--card); border: 2px solid var(--border); }
+        .btn-secondary { background: var(--secondary); color: var(--foreground); }
+        .btn-accent { background: var(--accent); color: var(--foreground); }
+        .btn-full { width: 100%; }
+        .btn-ghost { background: transparent; box-shadow: none; }
+        .btn-ghost:hover { background: var(--muted); }
+
+        /* 社交登录按钮: White填充 + Black边框，左侧品牌图标，居中对齐 */
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;  /* 明确居中对齐 */
+            gap: var(--space-s);
+            background: var(--card);
+            padding: var(--space-s) var(--space-l);
+            width: 100%;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--shadow-hard-sm);
+        }
+
+        .social-btn:hover { transform: translate(2px, 2px); box-shadow: none; }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .social-icon.qq::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background: #12B7F5;
+            border-radius: 2px;
+            border: 2px solid var(--border);
+        }
+
+        .social-icon.wechat::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background: #07C160;
+            border-radius: 2px;
+            border: 2px solid var(--border);
+        }
+
+        /* ========================================
+           NAVIGATION
+           ======================================== */
+        .nav {
+            height: 64px;
+            background: var(--accent);
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-m);
+        }
+
+        .nav-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-hard-sm);
+        }
+
+        .nav-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* ========================================
+           TAB NAVIGATION
+           ======================================== */
+        .tab-nav {
+            display: flex;
+            gap: var(--space-s);
+            padding: var(--space-m) var(--space-xl);
+            background: var(--card);
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            padding: var(--space-s) var(--space-l);
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: var(--space-s);
+            color: var(--foreground);
+        }
+
+        .tab-btn:hover { background: var(--muted); }
+        .tab-btn.active { background: var(--foreground); color: var(--card); }
+
+        .tab-btn .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid currentColor;
+            border-radius: var(--radius-base);
+            background: var(--card);
+            transition: all 0.2s ease-out;
+        }
+
+        .tab-btn.active .icon-wrapper {
+            background: var(--card);
+            color: var(--foreground);
+        }
+
+        .tab-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* ========================================
+           CARDS - 白色背景 + 2px黑色边框 + 硬阴影
+           ======================================== */
+        .card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);  /* 8px */
+            padding: var(--space-l);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-m);
+            padding-bottom: var(--space-m);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ========================================
+           LABELS
+           ======================================== */
+        .label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: var(--space-xs) var(--space-s);
+            display: inline-block;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+        }
+
+        .label-primary { background: var(--primary); color: var(--card); }
+        .label-secondary { background: var(--secondary); color: var(--foreground); }
+        .label-accent { background: var(--accent); color: var(--foreground); }
+        .label-muted { background: var(--muted); color: var(--foreground); }
+
+        /* ========================================
+           SECTIONS
+           ======================================== */
+        .section { margin-bottom: var(--space-xl); }
+        .section-header { margin-bottom: var(--space-l); }
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: var(--space-s);
+        }
+
+        .section-subtitle { font-size: 14px; color: #666; }
+
+        /* Animation - ease-out 200ms */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-up { animation: fade-up 0.5s ease-out forwards; }
+
+        /* ========================================
+           DELIVERY PANEL
+           ======================================== */
+        .delivery-panel {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-l);
+        }
+
+        @media (min-width: 768px) {
+            .delivery-panel { grid-template-columns: 300px 1fr; }
+        }
+
+        .delivery-header { display: flex; align-items: center; gap: var(--space-m); }
+
+        .delivery-avatar {
+            width: 72px;
+            height: 72px;
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: var(--shadow-hard-sm);
+        }
+
+        .delivery-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-s); }
+
+        .stat-card {
+            text-align: center;
+            padding: var(--space-m);
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-top: var(--space-xs);
+        }
+
+        .status-panel { display: flex; flex-direction: column; gap: var(--space-m); }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-m);
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+        }
+
+        .status-row-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-s);
+            font-family: var(--font-heading);
+            font-weight: 600;
+        }
+
+        .toggle-switch {
+            width: 52px;
+            height: 28px;
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--foreground);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.2s ease-out;
+        }
+
+        .toggle-switch.active { background: var(--secondary); }
+        .toggle-switch.active::after { left: 26px; }
+
+        .battery-display {
+            display: flex;
+            align-items: center;
+            gap: var(--space-s);
+            font-family: var(--font-mono);
+            font-weight: 600;
+        }
+
+        .battery-icon {
+            width: 28px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-radius: 2px;
+            position: relative;
+            padding: 2px;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            width: 3px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-level {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 1px;
+        }
+
+        /* ========================================
+           CAMERA SECTION
+           ======================================== */
+        .camera-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-l);
+        }
+
+        @media (min-width: 768px) {
+            .camera-section { grid-template-columns: 1fr 1fr; }
+        }
+
+        .camera-viewfinder {
+            aspect-ratio: 4/3;
+            background: var(--foreground);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-hard);
+        }
+
+        .camera-placeholder {
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .camera-placeholder-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-m);
+            opacity: 0.6;
+        }
+
+        .camera-placeholder-text {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .camera-viewfinder video,
+        .camera-viewfinder canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-actions {
+            position: absolute;
+            bottom: var(--space-m);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: var(--space-m);
+        }
+
+        .camera-btn {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border: 3px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-hard);
+            transition: all 0.2s ease-out;
+        }
+
+        .camera-btn:hover { transform: translate(2px, 2px); box-shadow: none; }
+
+        .camera-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-s);
+            margin-top: var(--space-m);
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .gallery-item:hover { transform: translate(2px, 2px); box-shadow: var(--shadow-hard-sm); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); }
+        .form-group { display: flex; flex-direction: column; gap: var(--space-xs); }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-actions { display: flex; gap: var(--space-s); margin-top: var(--space-m); }
+
+        /* ========================================
+           ORDER LIST
+           ======================================== */
+        .order-tabs {
+            display: flex;
+            gap: var(--space-s);
+            margin-bottom: var(--space-l);
+            flex-wrap: wrap;
+        }
+
+        .order-tab {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            padding: var(--space-s) var(--space-m);
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+        }
+
+        .order-tab:hover { background: var(--muted); }
+        .order-tab.active { background: var(--foreground); color: var(--card); }
+
+        .order-list { display: flex; flex-direction: column; gap: var(--space-m); }
+
+        .order-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-hard);
+            transition: all 0.2s ease-out;
+        }
+
+        .order-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1); }
+
+        .order-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-m);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .order-id { font-family: var(--font-mono); font-size: 14px; font-weight: 700; }
+        .order-time { font-family: var(--font-mono); font-size: 12px; color: #666; }
+        .order-body { padding: var(--space-m); }
+
+        .order-route {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-m);
+            margin-bottom: var(--space-m);
+        }
+
+        .route-item { display: flex; align-items: flex-start; gap: var(--space-m); }
+
+        .route-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .route-info { flex: 1; }
+        .route-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-bottom: var(--space-xs);
+        }
+
+        .route-value {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .order-items {
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            padding: var(--space-m);
+            margin-bottom: var(--space-m);
+        }
+
+        .order-item { display: flex; justify-content: space-between; align-items: center; }
+        .order-item:not(:last-child) {
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: var(--space-s);
+            margin-bottom: var(--space-s);
+        }
+        .order-item:last-child { padding-top: var(--space-xs); }
+        .order-item-name { font-size: 14px; }
+        .order-item-qty { font-family: var(--font-mono); font-size: 12px; color: #666; }
+
+        .order-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-m);
+            border-top: 2px solid var(--border);
+        }
+
+        .order-price { font-family: var(--font-mono); font-size: 18px; font-weight: 700; }
+        .order-actions { display: flex; gap: var(--space-s); }
+
+        /* ========================================
+           TEMPERATURE CHART
+           ======================================== */
+        .chart-container {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);
+            padding: var(--space-l);
+            box-shadow: var(--shadow-hard);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-l);
+            padding-bottom: var(--space-m);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .chart-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-legend { display: flex; gap: var(--space-m); }
+        .legend-item { display: flex; align-items: center; gap: var(--space-xs); font-family: var(--font-mono); font-size: 11px; }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--border);
+            border-radius: 2px;
+        }
+
+        .legend-dot.temp { background: var(--primary); }
+        .legend-dot.humidity { background: var(--secondary); }
+
+        .chart-canvas {
+            width: 100%;
+            height: 300px;
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+        }
+
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-m);
+            margin-top: var(--space-l);
+        }
+
+        .chart-stat {
+            text-align: center;
+            padding: var(--space-m);
+            background: var(--muted);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+        }
+
+        .chart-stat-value {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .chart-stat-value.warning { color: var(--primary); }
+        .chart-stat-value.good { color: var(--secondary); }
+
+        .chart-stat-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            margin-top: var(--space-xs);
+        }
+
+        .temp-controls { display: flex; gap: var(--space-s); margin-top: var(--space-m); }
+
+        /* ========================================
+           MAP SECTION
+           ======================================== */
+        .map-container {
+            position: relative;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            box-shadow: var(--shadow-hard);
+        }
+
+        .map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-m);
+            border-bottom: 2px solid var(--border);
+            background: var(--muted);
+        }
+
+        .map-title {
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .map-tools { display: flex; gap: var(--space-s); }
+
+        .map-viewport {
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            cursor: grab;
+            position: relative;
+            background: var(--muted);
+        }
+
+        .map-viewport:active { cursor: grabbing; }
+
+        .map-content {
+            position: absolute;
+            width: 2000px;
+            height: 2000px;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transition: transform 0.1s ease-out;
+        }
+
+        .map-marker {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-hard-sm);
+            transition: all 0.2s ease-out;
+            z-index: 10;
+        }
+
+        .map-marker:hover { transform: scale(1.1); z-index: 20; }
+        .map-marker.delivery { background: var(--primary); }
+        .map-marker.restaurant { background: var(--secondary); }
+        .map-marker.customer { background: var(--accent); }
+
+        .map-legend {
+            position: absolute;
+            top: var(--space-m);
+            left: var(--space-m);
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            padding: var(--space-s);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            box-shadow: var(--shadow-hard);
+            z-index: 30;
+        }
+
+        .map-legend-item { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) 0; }
+
+        .map-legend-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .map-zoom-controls {
+            position: absolute;
+            top: var(--space-m);
+            right: var(--space-m);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            z-index: 30;
+        }
+
+        .map-zoom-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-hard-sm);
+            transition: all 0.2s ease-out;
+        }
+
+        .map-zoom-btn:hover { transform: translate(1px, 1px); box-shadow: none; }
+
+        .map-info {
+            position: absolute;
+            bottom: var(--space-m);
+            left: var(--space-m);
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            padding: var(--space-m);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            box-shadow: var(--shadow-hard);
+            z-index: 30;
+        }
+
+        .map-info-row { display: flex; gap: var(--space-m); }
+        .map-info-item { display: flex; align-items: center; gap: var(--space-xs); }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        #mainApp:not(.hidden) { display: block !important; min-height: 100vh; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-s { gap: var(--space-s); }
+        .gap-m { gap: var(--space-m); }
+        .mt-m { margin-top: var(--space-m); }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         LOGIN PAGE - 双栏布局
+         ======================================== -->
+    <div class="login-page" id="loginPage">
+        <div class="login-left">
+            <!-- 像素外卖箱插画 - 简约线条画风格 -->
+            <div class="pixel-box-large pixel-art">
+                <!-- Row 1-2: Top lid -->
+                <div class="b b b b p p p p p p p p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <!-- Row 3-4: Lid with strap -->
+                <div class="b b b b p w g g g g g g p b b b b b b b b"></div>
+                <div class="b b b b p w g d d d d g p b b b b b b b b"></div>
+                <!-- Row 5: Strap buckle -->
+                <div class="b b b b p w g d g g d g p b b b b b b b b"></div>
+                <!-- Row 6-8: Main box body -->
+                <div class="b b b b p p p p p p p p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <!-- Row 9-12: Box body continued -->
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <div class="b b b b p w w w w w w w p b b b b b b b b"></div>
+                <!-- Row 13-14: Bottom -->
+                <div class="b b b b d d d d d d d d b b b b b b b b"></div>
+                <div class="b b b b d d d d d d d d b b b b b b b b"></div>
+            </div>
+
+            <!-- 几何图形装饰 - 点缀亲和感 -->
+            <div class="pixel-deco">
+                <div class="pixel-block"></div>
+                <div class="pixel-block blue"></div>
+                <div class="pixel-coin"></div>
+                <div class="pixel-block yellow"></div>
+                <div class="pixel-block"></div>
+            </div>
+
+            <!-- 品牌标识 -->
+            <div class="login-brand">
+                <h1>智能外卖箱</h1>
+                <p>Quack Design 插画式技术架构</p>
+            </div>
+        </div>
+
+        <div class="login-right">
+            <!-- H2: 24px, 间距 L: 24px -->
+            <h2 class="login-title">登录</h2>
+
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">用户名 / 手机号</label>
+                    <input type="text" class="form-input" placeholder="请输入用户名或手机号" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" placeholder="请输入密码" required>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #666; cursor: pointer;">
+                        <input type="checkbox" style="width: 16px; height: 16px; border: 2px solid var(--border);">
+                        记住登录状态
+                    </label>
+                </div>
+
+                <!-- 主要按钮: Orange填充 + Black边框 -->
+                <button type="submit" class="btn btn-primary btn-lg btn-full">登录</button>
+
+                <!-- 分隔线 -->
+                <div style="display: flex; align-items: center; gap: 16px; margin: 8px 0;">
+                    <div style="flex: 1; height: 2px; background: var(--border);"></div>
+                    <span style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: #666;">或</span>
+                    <div style="flex: 1; height: 2px; background: var(--border);"></div>
+                </div>
+
+                <!-- 社交登录按钮: White填充 + Black边框，左侧品牌图标 -->
+                <button type="button" class="social-btn">
+                    <span class="social-icon qq"></span>
+                    <span>QQ 登录</span>
+                </button>
+
+                <button type="button" class="social-btn">
+                    <span class="social-icon wechat"></span>
+                    <span>微信 登录</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================
+         MAIN APPLICATION
+         ======================================== -->
+    <div id="mainApp" class="hidden" style="min-height: 100vh;">
+        <nav class="nav">
+            <div class="container nav-content">
+                <div class="nav-brand">
+                    <div class="nav-logo">
+                        <!-- 像素外卖箱图标 -->
+                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 3px;">
+                            <div class="b b p p p p b b"></div>
+                            <div class="b p w g g w p b"></div>
+                            <div class="p w w w w w w p"></div>
+                            <div class="p w w w w w w p"></div>
+                            <div class="p p p p p p p p"></div>
+                            <div class="d d d d d d d d"></div>
+                        </div>
+                    </div>
+                    <span class="nav-title">智能外卖箱</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-page="delivery">
+                <span class="icon-wrapper">
+                    <div class="pixel-box-icon pixel-art">
+                        <div class="b b p p p p b b"></div>
+                        <div class="b p w g g w p b"></div>
+                        <div class="p w w w w w w p"></div>
+                        <div class="p w w w w w w p"></div>
+                        <div class="p p p p p p p p"></div>
+                        <div class="d d d d d d d d"></div>
+                    </div>
+                </span>
+                <span class="tab-label">外卖员栏</span>
+            </button>
+            <button class="tab-btn" data-page="camera">
+                <span class="icon-wrapper">
+                    <div class="pixel-camera pixel-art">
+                        <div class="n n g g g g g g n n"></div>
+                        <div class="n g g g g g g g g g n"></div>
+                        <div class="g g g g g g g g g g g"></div>
+                        <div class="g g l l l l l l g g g"></div>
+                        <div class="g g g g g g g g g g g"></div>
+                        <div class="n g g g g g g g g g n"></div>
+                        <div class="n n g g g y g g n n"></div>
+                    </div>
+                </span>
+                <span class="tab-label">美食摄影</span>
+            </button>
+            <button class="tab-btn" data-page="temperature">
+                <span class="icon-wrapper">
+                    <div class="pixel-thermometer pixel-art">
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w r r w n n n n n"></div>
+                        <div class="n n w r r w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n w w w n n n n n"></div>
+                        <div class="n n r r r n n n n n"></div>
+                    </div>
+                </span>
+                <span class="tab-label">温度曲线</span>
+            </button>
+            <button class="tab-btn" data-page="map">
+                <span class="icon-wrapper">
+                    <div class="pixel-map-icon pixel-art">
+                        <div class="n n n r r n n n n"></div>
+                        <div class="n n r r r r n n n n"></div>
+                        <div class="n r b b b b r n n n"></div>
+                        <div class="n r b b b b b r n n"></div>
+                        <div class="n r b b b b b r n n"></div>
+                        <div class="n n r r r r r n n n"></div>
+                        <div class="n n n n n n n n n n"></div>
+                    </div>
+                </span>
+                <span class="tab-label">福州地图</span>
+            </button>
+        </div>
+
+        <main class="page-wrapper">
+            <div class="container">
+                <!-- Page 1: 外卖员栏 -->
+                <div class="page active" id="page-delivery">
+                    <section class="section animate-fade-up">
+                        <div class="section-header">
+                            <h1 class="section-title">外卖员栏</h1>
+                            <p class="section-subtitle">当前配送员信息与实时状态</p>
+                        </div>
+                        <div class="delivery-panel">
+                            <div class="card">
+                                <div class="delivery-header">
+                                    <div class="delivery-avatar">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 5px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                            <div class="d d d d d d d d"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style="font-family: var(--font-heading); font-size: 20px; font-weight: 700;">张小明</div>
+                                        <div style="font-family: var(--font-mono); font-size: 12px; color: #666;">工号: QUACK-2024-886</div>
+                                    </div>
+                                </div>
+                                <div class="delivery-stats mt-m">
+                                    <div class="stat-card">
+                                        <div class="stat-value">12</div>
+                                        <div class="stat-label">今日接单</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">8</div>
+                                        <div class="stat-label">已完成</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">4</div>
+                                        <div class="stat-label">配送中</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="status-panel">
+                                <div class="card">
+                                    <div class="status-row">
+                                        <div class="status-row-label">
+                                            <span>📶</span>
+                                            <span id="mainStatusText">当前状态: 离线</span>
+                                        </div>
+                                        <div class="toggle-switch" id="statusToggle" onclick="toggleOnlineStatus()"></div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="status-row">
+                                        <div class="status-row-label">
+                                            <span>🔋</span>
+                                            <span>设备电量</span>
+                                        </div>
+                                        <div class="battery-display">
+                                            <span>85%</span>
+                                            <div class="battery-icon">
+                                                <div class="battery-level" style="width: 85%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="status-row">
+                                        <div class="status-row-label">
+                                            <span>📍</span>
+                                            <span>当前位置</span>
+                                        </div>
+                                        <span class="label label-secondary">福州 · 鼓楼区</span>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="status-row">
+                                        <div class="status-row-label">
+                                            <span>🌡️</span>
+                                            <span>箱内温度</span>
+                                        </div>
+                                        <span class="label label-accent">25°C</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section animate-fade-up" style="animation-delay: 0.1s;">
+                        <div class="section-header">
+                            <h2 class="section-title">外卖单子列表</h2>
+                            <p class="section-subtitle">管理所有配送订单状态</p>
+                        </div>
+
+                        <div class="order-tabs">
+                            <button class="order-tab active" data-filter="all" onclick="filterOrders('all')">全部</button>
+                            <button class="order-tab" data-filter="pending" onclick="filterOrders('pending')">待取餐</button>
+                            <button class="order-tab" data-filter="delivering" onclick="filterOrders('delivering')">配送中</button>
+                            <button class="order-tab" data-filter="completed" onclick="filterOrders('completed')">已完成</button>
+                        </div>
+
+                        <div class="order-list" id="orderList">
+                            <div class="order-card" data-status="delivering">
+                                <div class="order-header">
+                                    <span class="order-id">#OD2024031501</span>
+                                    <span class="order-time">12:35 下单</span>
+                                </div>
+                                <div class="order-body">
+                                    <div class="order-route">
+                                        <div class="route-item">
+                                            <div class="route-icon">🏪</div>
+                                            <div class="route-info">
+                                                <div class="route-label">取餐地址</div>
+                                                <div class="route-value">福州·东街口 麦当劳</div>
+                                            </div>
+                                        </div>
+                                        <div class="route-item">
+                                            <div class="route-icon">🏢</div>
+                                            <div class="route-info">
+                                                <div class="route-label">送餐地址</div>
+                                                <div class="route-value">福州·三坊七巷 102室</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <span class="order-item-name">巨无霸套餐 + 中薯</span>
+                                            <span class="order-item-qty">x1</span>
+                                        </div>
+                                        <div class="order-item">
+                                            <span class="order-item-name">可乐</span>
+                                            <span class="order-item-qty">x2</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="label label-secondary">配送中</span>
+                                        <span class="order-price">¥65.00</span>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <span style="font-size: 12px; color: #666;">预计送达: 13:05</span>
+                                    <div class="order-actions">
+                                        <button class="btn btn-sm btn-primary" onclick="updateOrderStatus('OD2024031501', 'completed')">确认完成</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-card" data-status="pending">
+                                <div class="order-header">
+                                    <span class="order-id">#OD2024031502</span>
+                                    <span class="order-time">12:42 下单</span>
+                                </div>
+                                <div class="order-body">
+                                    <div class="order-route">
+                                        <div class="route-item">
+                                            <div class="route-icon">🏪</div>
+                                            <div class="route-info">
+                                                <div class="route-label">取餐地址</div>
+                                                <div class="route-value">福州·东百中心 绿茶餐厅</div>
+                                            </div>
+                                        </div>
+                                        <div class="route-item">
+                                            <div class="route-icon">🏢</div>
+                                            <div class="route-info">
+                                                <div class="route-label">送餐地址</div>
+                                                <div class="route-value">福州·五四路 国际贸易中心</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <span class="order-item-name">东坡肉 + 米饭</span>
+                                            <span class="order-item-qty">x1</span>
+                                        </div>
+                                        <div class="order-item">
+                                            <span class="order-item-name">龙井虾仁</span>
+                                            <span class="order-item-qty">x1</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="label label-accent">待取餐</span>
+                                        <span class="order-price">¥156.00</span>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <span style="font-size: 12px; color: #666;">请尽快取餐</span>
+                                    <div class="order-actions">
+                                        <button class="btn btn-sm btn-secondary" onclick="updateOrderStatus('OD2024031502', 'delivering')">开始配送</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="order-card" data-status="completed">
+                                <div class="order-header">
+                                    <span class="order-id">#OD2024031503</span>
+                                    <span class="order-time">11:20 下单</span>
+                                </div>
+                                <div class="order-body">
+                                    <div class="order-route">
+                                        <div class="route-item">
+                                            <div class="route-icon">🏪</div>
+                                            <div class="route-info">
+                                                <div class="route-label">取餐地址</div>
+                                                <div class="route-value">福州·冠亚广场 星巴克</div>
+                                            </div>
+                                        </div>
+                                        <div class="route-item">
+                                            <div class="route-icon">🏢</div>
+                                            <div class="route-info">
+                                                <div class="route-label">送餐地址</div>
+                                                <div class="route-value">福州·乌山 闽江学院</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <span class="order-item-name">拿铁 (中)</span>
+                                            <span class="order-item-qty">x2</span>
+                                        </div>
+                                        <div class="order-item">
+                                            <span class="order-item-name">提拉米苏</span>
+                                            <span class="order-item-qty">x1</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="label label-muted">已完成</span>
+                                        <span class="order-price">¥82.00</span>
+                                    </div>
+                                </div>
+                                <div class="order-footer">
+                                    <span style="font-size: 12px; color: #666;">完成时间: 11:58</span>
+                                    <div class="order-actions">
+                                        <button class="btn btn-sm btn-ghost" disabled>已送达</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Page 2: 美食摄影 -->
+                <div class="page" id="page-camera">
+                    <section class="section animate-fade-up">
+                        <div class="section-header">
+                            <h1 class="section-title">美食摄影</h1>
+                            <p class="section-subtitle">拍摄菜品照片并录入外卖信息</p>
+                        </div>
+                        <div class="camera-section">
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="card-title">📷 摄像头预览</span>
+                                    <button class="btn btn-sm btn-ghost" onclick="switchCamera()">切换</button>
+                                </div>
+                                <div class="camera-viewfinder" id="cameraViewfinder">
+                                    <div class="camera-placeholder" id="cameraPlaceholder">
+                                        <div class="camera-placeholder-icon">📷</div>
+                                        <div class="camera-placeholder-text">点击启动摄像头</div>
+                                    </div>
+                                    <video id="videoElement" class="hidden" autoplay playsinline></video>
+                                    <canvas id="canvasElement" class="hidden"></canvas>
+                                    <div class="camera-actions hidden" id="cameraActions">
+                                        <button class="camera-btn" onclick="takePhoto()">📸</button>
+                                    </div>
+                                </div>
+                                <div class="camera-gallery" id="photoGallery">
+                                    <div class="gallery-item" title="宫保鸡丁">🍗</div>
+                                    <div class="gallery-item" title="麻婆豆腐">🧈</div>
+                                    <div class="gallery-item" title="清炒时蔬">🥬</div>
+                                    <div class="gallery-item" title="番茄蛋汤">🍅</div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <span class="card-title">📝 菜品信息录入</span>
+                                </div>
+                                <form id="foodForm" onsubmit="submitFoodForm(event)">
+                                    <div class="form-grid">
+                                        <div class="form-group full-width">
+                                            <label class="form-label">菜品名称</label>
+                                            <input type="text" class="form-input" placeholder="输入菜品名称" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">价格 (元)</label>
+                                            <input type="number" class="form-input" placeholder="0.00" step="0.01" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">数量</label>
+                                            <input type="number" class="form-input" placeholder="1" min="1" value="1" required>
+                                        </div>
+                                        <div class="form-group full-width">
+                                            <label class="form-label">备注</label>
+                                            <input type="text" class="form-input" placeholder="特殊要求或备注信息">
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">确认录入</button>
+                                        <button type="button" class="btn btn-ghost" onclick="clearForm()">清空</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Page 3: 温度曲线 -->
+                <div class="page" id="page-temperature">
+                    <section class="section animate-fade-up">
+                        <div class="section-header">
+                            <h1 class="section-title">外卖箱温度监控</h1>
+                            <p class="section-subtitle">实时监测箱内温度与湿度变化</p>
+                        </div>
+
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <span class="chart-title">🌡️ 24小时温度曲线</span>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-dot temp"></div>
+                                        <span>温度 (°C)</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-dot humidity"></div>
+                                        <span>湿度 (%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <canvas id="tempChart" class="chart-canvas"></canvas>
+                            <div class="chart-stats">
+                                <div class="chart-stat">
+                                    <div class="chart-stat-value good" id="statCurrentTemp">25°C</div>
+                                    <div class="chart-stat-label">当前温度</div>
+                                </div>
+                                <div class="chart-stat">
+                                    <div class="chart-stat-value" id="statAvgTemp">23°C</div>
+                                    <div class="chart-stat-label">平均温度</div>
+                                </div>
+                                <div class="chart-stat">
+                                    <div class="chart-stat-value warning" id="statMaxTemp">32°C</div>
+                                    <div class="chart-stat-label">最高温度</div>
+                                </div>
+                                <div class="chart-stat">
+                                    <div class="chart-stat-value good" id="statHumidity">45%</div>
+                                    <div class="chart-stat-label">当前湿度</div>
+                                </div>
+                            </div>
+                            <div class="temp-controls">
+                                <button class="btn btn-sm" onclick="changeTimeRange('1h')">1小时</button>
+                                <button class="btn btn-sm active" onclick="changeTimeRange('24h')">24小时</button>
+                                <button class="btn btn-sm" onclick="changeTimeRange('7d')">7天</button>
+                                <button class="btn btn-sm btn-secondary" onclick="exportData()">导出数据</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Page 4: 福州地图 -->
+                <div class="page" id="page-map">
+                    <section class="section animate-fade-up">
+                        <div class="section-header">
+                            <h1 class="section-title">福州地图</h1>
+                            <p class="section-subtitle">实时配送位置与路径规划</p>
+                        </div>
+
+                        <div class="map-container">
+                            <div class="map-header">
+                                <span class="map-title">🗺️ 配送地图 - 福州鼓楼区</span>
+                                <div class="map-tools">
+                                    <button class="btn btn-sm" onclick="centerMap()">居中</button>
+                                    <button class="btn btn-sm" onclick="togglePath()">显示路径</button>
+                                </div>
+                            </div>
+                            <div class="map-viewport" id="mapViewport">
+                                <div class="map-content" id="mapContent">
+                                    <!-- Map markers with pixel icons -->
+                                    <div class="map-marker delivery" style="left: 450px; top: 350px;" title="配送员">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                    <div class="map-marker restaurant" style="left: 280px; top: 380px;" title="麦当劳 东街口店">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                    <div class="map-marker restaurant" style="left: 650px; top: 280px;" title="绿茶餐厅 东百店">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                    <div class="map-marker restaurant" style="left: 180px; top: 500px;" title="星巴克 冠亚店">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                    <div class="map-marker customer" style="left: 720px; top: 320px;" title="客户 三坊七巷">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                    <div class="map-marker customer" style="left: 850px; top: 420px;" title="客户 国贸中心">
+                                        <div class="pixel-box-icon pixel-art" style="--pixel-size: 4px;">
+                                            <div class="b b p p p p b b"></div>
+                                            <div class="b p w g g w p b"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p w w w w w w p"></div>
+                                            <div class="p p p p p p p p"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="map-legend">
+                                    <div class="map-legend-item">
+                                        <div class="map-legend-icon" style="background: var(--primary);">
+                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
+                                                <div class="b p p p b"></div>
+                                                <div class="p w g w p"></div>
+                                                <div class="p p p p p"></div>
+                                            </div>
+                                        </div>
+                                        <span>配送员</span>
+                                    </div>
+                                    <div class="map-legend-item">
+                                        <div class="map-legend-icon" style="background: var(--secondary);">
+                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
+                                                <div class="b p p p b"></div>
+                                                <div class="p w g w p"></div>
+                                                <div class="p p p p p"></div>
+                                            </div>
+                                        </div>
+                                        <span>餐厅</span>
+                                    </div>
+                                    <div class="map-legend-item">
+                                        <div class="map-legend-icon" style="background: var(--accent);">
+                                            <div class="pixel-box-icon pixel-art" style="--pixel-size: 2px;">
+                                                <div class="b p p p b"></div>
+                                                <div class="p w g w p"></div>
+                                                <div class="p p p p p"></div>
+                                            </div>
+                                        </div>
+                                        <span>客户</span>
+                                    </div>
+                                </div>
+
+                                <div class="map-zoom-controls">
+                                    <button class="map-zoom-btn" onclick="zoomIn()">+</button>
+                                    <button class="map-zoom-btn" onclick="zoomOut()">−</button>
+                                </div>
+
+                                <div class="map-info">
+                                    <div class="map-info-row">
+                                        <div class="map-info-item">
+                                            <span>📍</span>
+                                            <span>当前位置: 福州·鼓楼区</span>
+                                        </div>
+                                        <div class="map-info-item">
+                                            <span>🧭</span>
+                                            <span>缩放: <span id="zoomLevel">100%</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let isOnline = false;
+        let cameraStream = null;
+        let currentFilter = 'all';
+        let photoCount = 4;
+        let currentPage = 'delivery';
+        let mapScale = 1;
+        let mapOffset = { x: 0, y: 0 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+
+        function handleLogin(event) {
+            event.preventDefault();
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                currentPage = page;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+                document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === `page-${page}`));
+                if (page === 'temperature') setTimeout(drawTemperatureChart, 100);
+            });
+        });
+
+        function toggleOnlineStatus() {
+            isOnline = !isOnline;
+            const mainText = document.getElementById('mainStatusText');
+            const toggle = document.getElementById('statusToggle');
+            if (isOnline) {
+                mainText.textContent = '当前状态: 在线接单中';
+                toggle.classList.add('active');
+            } else {
+                mainText.textContent = '当前状态: 离线';
+                toggle.classList.remove('active');
+            }
+        }
+
+        async function startCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                const video = document.getElementById('videoElement');
+                video.srcObject = cameraStream;
+                video.classList.remove('hidden');
+                document.getElementById('cameraPlaceholder').classList.add('hidden');
+                document.getElementById('cameraActions').classList.remove('hidden');
+            } catch (err) { alert('无法访问摄像头，请检查权限设置'); }
+        }
+
+        function stopCamera() {
+            if (cameraStream) { cameraStream.getTracks().forEach(track => track.stop()); cameraStream = null; }
+            const video = document.getElementById('videoElement');
+            video.srcObject = null;
+            video.classList.add('hidden');
+            document.getElementById('cameraPlaceholder').classList.remove('hidden');
+            document.getElementById('cameraActions').classList.add('hidden');
+        }
+
+        async function switchCamera() { if (cameraStream) stopCamera(); await startCamera(); }
+
+        function takePhoto() {
+            const video = document.getElementById('videoElement');
+            const canvas = document.getElementById('canvasElement');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            addPhotoToGallery(canvas.toDataURL('image/jpeg'));
+        }
+
+        function addPhotoToGallery(dataUrl) {
+            photoCount++;
+            const gallery = document.getElementById('photoGallery');
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `<img src="${dataUrl}" alt="照片 ${photoCount}">`;
+            item.onclick = function() { if (confirm('删除此照片?')) this.remove(); };
+            gallery.appendChild(item);
+        }
+
+        function submitFoodForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const entries = Array.from(formData.entries());
+            alert(`菜品录入成功!\n\n菜品: ${entries[0][1]}\n价格: ¥${entries[1][1]}\n数量: ${entries[2][1]}\n备注: ${entries[3][1] || '无'}`);
+            form.reset();
+        }
+
+        function clearForm() { document.getElementById('foodForm').reset(); }
+
+        function filterOrders(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.order-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.filter === filter));
+            document.querySelectorAll('.order-card').forEach(order => order.style.display = (filter === 'all' || order.dataset.status === filter) ? 'block' : 'none');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            document.querySelectorAll('.order-card').forEach(card => {
+                const id = card.querySelector('.order-id').textContent.replace('#', '');
+                if (id === orderId) {
+                    card.dataset.status = newStatus;
+                    const statusLabel = card.querySelector('.flex.items-center.justify-between .label');
+                    const actions = card.querySelector('.order-actions');
+                    if (newStatus === 'delivering') {
+                        statusLabel.className = 'label label-secondary';
+                        statusLabel.textContent = '配送中';
+                        actions.innerHTML = `<button class="btn btn-sm btn-primary" onclick="updateOrderStatus('${orderId}', 'completed')">确认完成</button>`;
+                    } else if (newStatus === 'completed') {
+                        statusLabel.className = 'label label-muted';
+                        statusLabel.textContent = '已完成';
+                        actions.innerHTML = `<button class="btn btn-sm btn-ghost" disabled>已送达</button>`;
+                        const now = new Date();
+                        card.querySelector('.order-footer span').textContent = `完成时间: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    }
+                    if (currentFilter !== 'all') card.style.display = 'none';
+                }
+            });
+        }
+
+        function drawTemperatureChart() {
+            const canvas = document.getElementById('tempChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = 300;
+            ctx.fillStyle = '#E8E4DD';
+            ctx.fillRect(0, 0, width, height);
+            ctx.strokeStyle = '#1A1A1A';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([2, 2]);
+            for (let i = 0; i <= 5; i++) {
+                const y = (height / 5) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+                ctx.fillStyle = '#666';
+                ctx.font = '11px JetBrains Mono';
+                ctx.fillText(`${40 - i * 8}°C`, 5, y - 5);
+            }
+            ctx.setLineDash([]);
+            const dataPoints = 24;
+            const tempData = [];
+            const humidityData = [];
+            for (let i = 0; i < dataPoints; i++) {
+                const hour = new Date().getHours();
+                const offset = (i - (24 - hour)) % 24;
+                tempData.push(25 + Math.sin(offset / 3) * 5 + Math.random() * 2);
+                humidityData.push(45 + Math.cos(offset / 4) * 10 + Math.random() * 5);
+            }
+            ctx.strokeStyle = '#FF8C42';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i < tempData.length; i++) {
+                const x = (width / (tempData.length - 1)) * i;
+                const y = height - ((tempData[i] - 8) / 32) * height;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.fillStyle = '#FF8C42';
+            for (let i = 0; i < tempData.length; i++) {
+                const x = (width / (tempData.length - 1)) * i;
+                const y = height - ((tempData[i] - 8) / 32) * height;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.strokeStyle = '#66C2FF';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            for (let i = 0; i < humidityData.length; i++) {
+                const x = (width / (humidityData.length - 1)) * i;
+                const y = height - (humidityData[i] / 100) * height;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            document.getElementById('statMaxTemp').textContent = `${Math.max(...tempData).toFixed(0)}°C`;
+            document.getElementById('statAvgTemp').textContent = `${(tempData.reduce((a, b) => a + b, 0) / tempData.length).toFixed(0)}°C`;
+            document.getElementById('statCurrentTemp').textContent = `${tempData[tempData.length - 1].toFixed(0)}°C`;
+            document.getElementById('statHumidity').textContent = `${humidityData[humidityData.length - 1].toFixed(0)}%`;
+        }
+
+        function changeTimeRange(range) {
+            document.querySelectorAll('.temp-controls .btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            drawTemperatureChart();
+        }
+
+        function exportData() { alert('数据导出功能 (模拟)'); }
+
+        const mapViewport = document.getElementById('mapViewport');
+        const mapContent = document.getElementById('mapContent');
+        if (mapViewport) {
+            mapViewport.addEventListener('mousedown', (e) => { isDragging = true; dragStart = { x: e.clientX - mapOffset.x, y: e.clientY - mapOffset.y }; mapViewport.style.cursor = 'grabbing'; });
+            document.addEventListener('mousemove', (e) => { if (!isDragging) return; mapOffset.x = e.clientX - dragStart.x; mapOffset.y = e.clientY - dragStart.y; mapContent.style.transform = `translate(${mapOffset.x}px, ${mapOffset.y}px) scale(${mapScale})`; });
+            document.addEventListener('mouseup', () => { isDragging = false; mapViewport.style.cursor = 'grab'; });
+            mapViewport.addEventListener('touchstart', (e) => { isDragging = true; dragStart = { x: e.touches[0].clientX - mapOffset.x, y: e.touches[0].clientY - mapOffset.y }; });
+            document.addEventListener('touchmove', (e) => { if (!isDragging) return; mapOffset.x = e.touches[0].clientX - dragStart.x; mapOffset.y = e.touches[0].clientY - dragStart.y; mapContent.style.transform = `translate(${mapOffset.x}px, ${mapOffset.y}px) scale(${mapScale})`; });
+            document.addEventListener('touchend', () => { isDragging = false; });
+        }
+
+        function zoomIn() { mapScale = Math.min(mapScale + 0.25, 3); mapContent.style.transform = `translate(${mapOffset.x}px, ${mapOffset.y}px) scale(${mapScale})`; document.getElementById('zoomLevel').textContent = `${(mapScale * 100).toFixed(0)}%`; }
+        function zoomOut() { mapScale = Math.max(mapScale - 0.25, 0.5); mapContent.style.transform = `translate(${mapOffset.x}px, ${mapOffset.y}px) scale(${mapScale})`; document.getElementById('zoomLevel').textContent = `${(mapScale * 100).toFixed(0)}%`; }
+        function centerMap() { mapOffset = { x: 0, y: 0 }; mapScale = 1; mapContent.style.transform = `translate(0px, 0px) scale(1)`; document.getElementById('zoomLevel').textContent = '100%'; }
+        function togglePath() { }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('cameraViewfinder')?.addEventListener('click', function(e) { if (e.target === this || e.target.id === 'cameraPlaceholder' || e.target.closest('.camera-placeholder')) startCamera(); });
+            if (currentPage === 'temperature') setTimeout(drawTemperatureChart, 100);
+        });
+    </script>
+</body>
+</html>

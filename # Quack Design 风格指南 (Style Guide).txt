@@ -1,0 +1,70 @@
+# Quack Design 风格指南 (Updated)
+
+## 1. 概述 (Overview)
+**设计理念：插画式的技术架构 (Illustrative Infrastructure)**
+本系统旨在打破传统 SaaS 产品的冷峻感，将活泼的插画元素与专业的云原生架构美学相结合。核心目标是创造一个既可靠、高效，又充满趣味和亲和力的数据分析环境。
+
+---
+
+## 2. 配色方案 (Color Palette)
+我们采用高饱和度的强调色搭配柔和的底色，营造出清晰的视觉层级。
+
+*   **主色 (Primary):** `MotherDuck Orange` (#FF8C42) - 用于品牌标识、关键行动点。
+*   **辅助色 (Secondary):** `Sky Blue` (#66C2FF) - 用于次要行动按钮、信息提示。
+*   **强调色 (Accent):** `Bright Yellow` (#FFD700) - 用于顶通提示、重要告警。
+*   **背景色 (Background):** `Cream White` (#F5F2ED) - 作为页面的主背景，减少视觉疲劳。
+*   **文字色 (Typography):** `Deep Charcoal` (#333333) - 确保高可读性。
+*   **边框色 (Border):** `Technical Black` (#1A1A1A) - 2px 的实线边框是本风格的核心。
+
+---
+
+## 3. 字体排版 (Typography)
+*   **标题 (Headings):** `Space Grotesk` - 具有未来感和技术感的无衬线字体。
+*   **正文 (Body):** `Inter` 或 `System Sans-Serif` - 保证长文本阅读的舒适度。
+*   **代码/技术数据 (Code/Data):** `JetBrains Mono` - 专为 SQL 编辑 and 参数展示设计。
+
+---
+
+## 4. 间距系统 (Spacing)
+采用 8px 为基础单位的栅格系统：
+*   XS: 4px | S: 8px | M: 16px | L: 24px | XL: 32px | XXL: 64px
+
+---
+
+## 5. 圆角半径 (Border Radius)
+*   **基础圆角 (Base):** `4px` - 用于按钮、输入框、小卡片。
+*   **大圆角 (Large):** `8px` - 用于模态框、主内容容器。
+
+---
+
+## 6. 组件样式 (Component Styles)
+*   **按钮 (Buttons):** 2px 黑色实线边框，扁平化填充色。Hover 时轻微向右下方偏移。
+*   **卡片 (Cards):** 白色背景 (#FFFFFF)，2px 黑色实线边框，使用硬阴影。
+
+---
+
+## 7. 阴影 (Shadows)
+采用 **2D 硬阴影**: `4px 4px 0px 0px rgba(0, 0, 0, 1)`。
+
+---
+
+## 8. 动画与动效 (Animation)
+交互反馈迅速 (Ease-out, 200ms)。插画元素可伴随呼吸感。
+
+---
+
+## 9. 图像与插画 (Imagery)
+简约线条画，粗线条 (2px)。将抽象的数据概念具象化。
+
+---
+
+## 10. 登录界面规范 (Login Interface Specifications)
+*   **布局结构**: 采用双栏分割布局。左侧为品牌插画展示区 (背景色使用 Cream White)，右侧为表单操作区 (背景色使用纯白)。
+*   **表单输入框**: 
+    *   样式：2px 黑色实线边框，4px 圆角。
+    *   状态：聚焦 (Focus) 时，边框颜色变为 MotherDuck Orange (#FF8C42)，并显示轻微的硬阴影。
+*   **按钮体系**:
+    *   主要按钮：Orange 填充 + Black 边框。
+    *   社交登录按钮 (QQ/微信)：White 填充 + Black 边框，左侧带品牌图标，居中对齐。
+*   **插画应用**: 在登录页左侧展示具有欢迎感的“外卖箱”插画要是像素感，并点缀几何图形，营造亲和且专业的第一印象。
+*   **排版细节**: 登录标题使用 H2 (24px)，间距遵循 L (24px) 规范以保持呼吸感。
