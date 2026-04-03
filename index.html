@@ -1652,7 +1652,7 @@
 
                         <div class="map-container">
                             <div class="map-header">
-                                <span class="map-title">🗺️ 配送地图 - 福建理工大学旗山校区北校区</span>
+                                <span class="map-title">🗺️ 配送地图 - 福建理工大学旗山校区(北校区)</span>
                                 <div class="map-tools">
                                     <button class="btn btn-sm btn-primary" onclick="calculateRoute()">计算路线</button>
                                     <button class="btn btn-sm" onclick="resetMapView()">重置</button>
@@ -1663,7 +1663,7 @@
                                 <div class="map-info-row">
                                     <div class="map-info-item">
                                         <span>📍</span>
-                                        <span>当前位置: <span id="deliveryLocation">福建理工大学旗山校区北校区</span></span>
+                                        <span>当前位置: <span id="deliveryLocation">福建理工大学旗山校区(北校区)</span></span>
                                     </div>
                                 </div>
                                 <div class="map-info-row" style="margin-top: 8px;">
@@ -1715,21 +1715,21 @@
         let customerMarkers = [];
         let routeLine = null;
 
-        // 福建理工大学旗山校区北校区坐标
-        const FUZHOU_CENTER = [26.0875, 119.2570];
-        const deliveryPersonLocation = [26.0875, 119.2570];
+        // 福建理工大学旗山校区中心点
+        const FUZHOU_CENTER = [26.031950, 119.196660];
+        const deliveryPersonLocation = [26.031950, 119.196660];
 
-        // 商家位置 - 福建理工大学旗山校区北校区周边
+        // 商家位置 - 福建理工大学旗山校区周边
         const restaurants = [
-            { name: '麦当劳 福州一中店', location: [26.0890, 119.2590], address: '福州·大学城 福州一中旁' },
-            { name: '沙县小吃', location: [26.0865, 119.2555], address: '福州·大学城 师大学生街' },
-            { name: '兰州拉面', location: [26.0855, 119.2580], address: '福州·大学城 旗山花园' }
+            { name: '麦当劳 理工店', location: [26.0330, 119.1945], address: '福州·闽侯县 学府南路' },
+            { name: '沙县小吃', location: [26.0305, 119.1980], address: '福州·闽侯县 学生街' },
+            { name: '兰州拉面', location: [26.0295, 119.1930], address: '福州·闽侯县 商业街' }
         ];
 
-        // 客户位置 - 福建理工大学旗山校区北校区学生宿舍
+        // 客户位置 - 福建理工大学旗山校区学生宿舍
         const customers = [
-            { name: '学生宿舍 1号楼', location: [26.0890, 119.2545], address: '福州·大学城 福建理工大学旗山校区' },
-            { name: '学生宿舍 5号楼', location: [26.0860, 119.2595], address: '福州·大学城 福建理工大学旗山校区' }
+            { name: '学生宿舍 1号楼', location: [26.0340, 119.1985], address: '福州·闽侯县 福建理工大学旗山校区' },
+            { name: '学生宿舍 5号楼', location: [26.0290, 119.1920], address: '福州·闽侯县 福建理工大学旗山校区' }
         ];
 
         // 初始化真实地图
@@ -1861,7 +1861,7 @@
             if (!map) return;
             map.setView(FUZHOU_CENTER, 16);
             deliveryMarker.setLatLng(deliveryPersonLocation);
-            document.getElementById('deliveryLocation').textContent = '福建理工大学旗山校区北校区';
+            document.getElementById('deliveryLocation').textContent = '福建理工大学旗山校区(北校区)';
             document.getElementById('nearestRestaurant').textContent = '点击计算路线';
             document.getElementById('nearestCustomer').textContent = '--';
             document.getElementById('totalDistance').textContent = '--';
