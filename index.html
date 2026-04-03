@@ -890,6 +890,22 @@
         .order-item-name { font-size: 14px; }
         .order-item-qty { font-family: var(--font-mono); font-size: 12px; color: #666; }
 
+        /* 美食照片 - 嵌入在订单食物条目中 */
+        .order-item-img {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-base);
+            background: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-right: var(--space-s);
+            object-fit: cover;
+        }
+
         .order-footer {
             display: flex;
             align-items: center;
@@ -1292,21 +1308,7 @@
                 </span>
                 <span class="tab-label">外卖员栏</span>
             </button>
-            <button class="tab-btn" data-page="camera">
-                <span class="icon-wrapper">
-                    <div class="pixel-camera pixel-art">
-                        <div class="n n r r r r r r n n"></div>
-                        <div class="n r r r r r r r r r n"></div>
-                        <div class="r r r r r r r r r r r"></div>
-                        <div class="r r d d d d d d r r r"></div>
-                        <div class="r r r r r r r r r r r"></div>
-                        <div class="n r r r r r r r r r n"></div>
-                        <div class="n n r r g g r r n n"></div>
-                    </div>
-                </span>
-                <span class="tab-label">美食摄影</span>
-            </button>
-            <button class="tab-btn" data-page="temperature">
+                        <button class="tab-btn" data-page="temperature">
                 <span class="icon-wrapper">
                     <div class="pixel-thermometer pixel-art">
                         <div class="n n w w w n n n n n"></div>
@@ -1466,10 +1468,12 @@
                                     </div>
                                     <div class="order-items">
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=80&h=80&fit=crop" alt="巨无霸套餐" onerror="this.textContent='🍔'">
                                             <span class="order-item-name">巨无霸套餐 + 中薯</span>
                                             <span class="order-item-qty">x1</span>
                                         </div>
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=80&h=80&fit=crop" alt="可乐" onerror="this.textContent='🥤'">
                                             <span class="order-item-name">可乐</span>
                                             <span class="order-item-qty">x2</span>
                                         </div>
@@ -1511,10 +1515,12 @@
                                     </div>
                                     <div class="order-items">
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1544025162-d76694265947?w=80&h=80&fit=crop" alt="东坡肉" onerror="this.textContent='🍖'">
                                             <span class="order-item-name">东坡肉 + 米饭</span>
                                             <span class="order-item-qty">x1</span>
                                         </div>
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=80&h=80&fit=crop" alt="龙井虾仁" onerror="this.textContent='🦐'">
                                             <span class="order-item-name">龙井虾仁</span>
                                             <span class="order-item-qty">x1</span>
                                         </div>
@@ -1556,10 +1562,12 @@
                                     </div>
                                     <div class="order-items">
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=80&h=80&fit=crop" alt="拿铁" onerror="this.textContent='☕'">
                                             <span class="order-item-name">拿铁 (中)</span>
                                             <span class="order-item-qty">x2</span>
                                         </div>
                                         <div class="order-item">
+                                            <img class="order-item-img" src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=80&h=80&fit=crop" alt="提拉米苏" onerror="this.textContent='🍰'">
                                             <span class="order-item-name">提拉米苏</span>
                                             <span class="order-item-qty">x1</span>
                                         </div>
@@ -1580,72 +1588,7 @@
                     </section>
                 </div>
 
-                <!-- Page 2: 美食摄影 -->
-                <div class="page" id="page-camera">
-                    <section class="section animate-fade-up">
-                        <div class="section-header">
-                            <h1 class="section-title">美食摄影</h1>
-                            <p class="section-subtitle">拍摄菜品照片并录入外卖信息</p>
-                        </div>
-                        <div class="camera-section">
-                            <div class="card">
-                                <div class="card-header">
-                                    <span class="card-title">📷 摄像头预览</span>
-                                    <button class="btn btn-sm btn-ghost" onclick="switchCamera()">切换</button>
-                                </div>
-                                <div class="camera-viewfinder" id="cameraViewfinder">
-                                    <div class="camera-placeholder" id="cameraPlaceholder">
-                                        <div class="camera-placeholder-icon">📷</div>
-                                        <div class="camera-placeholder-text">点击启动摄像头</div>
-                                    </div>
-                                    <video id="videoElement" class="hidden" autoplay playsinline></video>
-                                    <canvas id="canvasElement" class="hidden"></canvas>
-                                    <div class="camera-actions hidden" id="cameraActions">
-                                        <button class="camera-btn" onclick="takePhoto()">📸</button>
-                                    </div>
-                                </div>
-                                <div class="camera-gallery" id="photoGallery">
-                                    <div class="gallery-item" title="宫保鸡丁">🍗</div>
-                                    <div class="gallery-item" title="麻婆豆腐">🧈</div>
-                                    <div class="gallery-item" title="清炒时蔬">🥬</div>
-                                    <div class="gallery-item" title="番茄蛋汤">🍅</div>
-                                </div>
-                            </div>
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <span class="card-title">📝 菜品信息录入</span>
-                                </div>
-                                <form id="foodForm" onsubmit="submitFoodForm(event)">
-                                    <div class="form-grid">
-                                        <div class="form-group full-width">
-                                            <label class="form-label">菜品名称</label>
-                                            <input type="text" class="form-input" placeholder="输入菜品名称" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">价格 (元)</label>
-                                            <input type="number" class="form-input" placeholder="0.00" step="0.01" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">数量</label>
-                                            <input type="number" class="form-input" placeholder="1" min="1" value="1" required>
-                                        </div>
-                                        <div class="form-group full-width">
-                                            <label class="form-label">备注</label>
-                                            <input type="text" class="form-input" placeholder="特殊要求或备注信息">
-                                        </div>
-                                    </div>
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn btn-primary">确认录入</button>
-                                        <button type="button" class="btn btn-ghost" onclick="clearForm()">清空</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- Page 3: 温度曲线 -->
+                <!-- Page 2: 温度曲线 -->
                 <div class="page" id="page-temperature">
                     <section class="section animate-fade-up">
                         <div class="section-header">
@@ -1845,6 +1788,76 @@
         let mapOffset = { x: 0, y: 0 };
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
+        let tempUpdateInterval = null;
+        let tempData = [];
+        let humidityData = [];
+
+        // ========================================
+        // 温度曲线 API 接口占位 (后期接入)
+        // ========================================
+        // GET /api/temperature/latest
+        // Response: { temperature: 25.5, humidity: 45, timestamp: "2024-03-15T12:30:00Z" }
+        async function fetchTemperatureData() {
+            // TODO: 后期接入真实API
+            // const response = await fetch('/api/temperature/latest');
+            // const data = await response.json();
+            // return { temperature: data.temperature, humidity: data.humidity };
+
+            // 模拟数据 (每30秒生成一个新数据点)
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            const offset = (hour * 60 + minute) / 30;
+            const baseTemp = 25 + Math.sin(offset / 4) * 8;
+            const baseHumidity = 45 + Math.cos(offset / 6) * 15;
+            const temperature = baseTemp + (Math.random() - 0.5) * 3;
+            const humidity = Math.max(20, Math.min(80, baseHumidity + (Math.random() - 0.5) * 5));
+            return {
+                temperature: parseFloat(temperature.toFixed(1)),
+                humidity: parseFloat(humidity.toFixed(1)),
+                timestamp: now.toISOString()
+            };
+        }
+
+        async function updateTemperature() {
+            try {
+                const data = await fetchTemperatureData();
+
+                // 添加新数据点 (保留24小时数据，约48个点)
+                tempData.push(data.temperature);
+                humidityData.push(data.humidity);
+                if (tempData.length > 48) {
+                    tempData.shift();
+                    humidityData.shift();
+                }
+
+                // 重新绘制曲线
+                drawTemperatureChart();
+
+                // 更新统计数值
+                document.getElementById('statCurrentTemp').textContent = `${data.temperature.toFixed(0)}°C`;
+                document.getElementById('statHumidity').textContent = `${data.humidity.toFixed(0)}%`;
+
+                console.log(`[${data.timestamp}] 温度: ${data.temperature}°C, 湿度: ${data.humidity}%`);
+            } catch (err) {
+                console.error('获取温度数据失败:', err);
+            }
+        }
+
+        function startTemperatureMonitor() {
+            if (tempUpdateInterval) return;
+            updateTemperature(); // 立即执行一次
+            tempUpdateInterval = setInterval(updateTemperature, 30000); // 每30秒更新
+            console.log('温度监控已启动 (30秒/次)');
+        }
+
+        function stopTemperatureMonitor() {
+            if (tempUpdateInterval) {
+                clearInterval(tempUpdateInterval);
+                tempUpdateInterval = null;
+                console.log('温度监控已停止');
+            }
+        }
 
         function handleLogin(event) {
             event.preventDefault();
@@ -1858,7 +1871,14 @@
                 currentPage = page;
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.page === page));
                 document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === `page-${page}`));
-                if (page === 'temperature') setTimeout(drawTemperatureChart, 100);
+
+                // 温度页面 - 进入时启动监控，切换走时停止
+                if (page === 'temperature') {
+                    startTemperatureMonitor();
+                    setTimeout(drawTemperatureChart, 100);
+                } else {
+                    stopTemperatureMonitor();
+                }
             });
         });
 
@@ -1963,8 +1983,12 @@
             const ctx = canvas.getContext('2d');
             const width = canvas.width = canvas.offsetWidth;
             const height = canvas.height = 300;
+
+            // 清空画布
             ctx.fillStyle = '#E8E4DD';
             ctx.fillRect(0, 0, width, height);
+
+            // 绘制网格线
             ctx.strokeStyle = '#1A1A1A';
             ctx.lineWidth = 1;
             ctx.setLineDash([2, 2]);
@@ -1979,54 +2003,78 @@
                 ctx.fillText(`${40 - i * 8}°C`, 5, y - 5);
             }
             ctx.setLineDash([]);
-            const dataPoints = 24;
-            const tempData = [];
-            const humidityData = [];
-            for (let i = 0; i < dataPoints; i++) {
-                const hour = new Date().getHours();
-                const offset = (i - (24 - hour)) % 24;
-                tempData.push(25 + Math.sin(offset / 3) * 5 + Math.random() * 2);
-                humidityData.push(45 + Math.cos(offset / 4) * 10 + Math.random() * 5);
+
+            // 如果没有数据，生成初始数据
+            if (tempData.length === 0) {
+                for (let i = 0; i < 12; i++) {
+                    const baseTemp = 25 + Math.sin(i / 2) * 8;
+                    const baseHumidity = 45 + Math.cos(i / 3) * 15;
+                    tempData.push(baseTemp + (Math.random() - 0.5) * 2);
+                    humidityData.push(baseHumidity + (Math.random() - 0.5) * 5);
+                }
             }
+
+            // 绘制温度曲线 (橙色)
+            const tempMin = Math.min(...tempData, 8);
+            const tempMax = Math.max(...tempData, 40);
+            const tempRange = tempMax - tempMin || 32;
+
             ctx.strokeStyle = '#FF8C42';
             ctx.lineWidth = 3;
             ctx.beginPath();
             for (let i = 0; i < tempData.length; i++) {
                 const x = (width / (tempData.length - 1)) * i;
-                const y = height - ((tempData[i] - 8) / 32) * height;
+                const y = height - ((tempData[i] - tempMin) / tempRange) * height;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
+
+            // 绘制温度数据点
             ctx.fillStyle = '#FF8C42';
             for (let i = 0; i < tempData.length; i++) {
                 const x = (width / (tempData.length - 1)) * i;
-                const y = height - ((tempData[i] - 8) / 32) * height;
+                const y = height - ((tempData[i] - tempMin) / tempRange) * height;
                 ctx.beginPath();
                 ctx.arc(x, y, 4, 0, Math.PI * 2);
                 ctx.fill();
             }
+
+            // 绘制湿度曲线 (蓝色虚线)
+            const humidMin = 20;
+            const humidMax = 80;
+            const humidRange = humidMax - humidMin;
+
             ctx.strokeStyle = '#66C2FF';
             ctx.lineWidth = 2;
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
             for (let i = 0; i < humidityData.length; i++) {
                 const x = (width / (humidityData.length - 1)) * i;
-                const y = height - (humidityData[i] / 100) * height;
+                const y = height - ((humidityData[i] - humidMin) / humidRange) * height;
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
             ctx.setLineDash([]);
+
+            // 更新统计数值
             document.getElementById('statMaxTemp').textContent = `${Math.max(...tempData).toFixed(0)}°C`;
             document.getElementById('statAvgTemp').textContent = `${(tempData.reduce((a, b) => a + b, 0) / tempData.length).toFixed(0)}°C`;
-            document.getElementById('statCurrentTemp').textContent = `${tempData[tempData.length - 1].toFixed(0)}°C`;
-            document.getElementById('statHumidity').textContent = `${humidityData[humidityData.length - 1].toFixed(0)}%`;
         }
 
         function changeTimeRange(range) {
             document.querySelectorAll('.temp-controls .btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+
+            // 根据时间范围显示不同数量的数据点
+            const pointsMap = { '1h': 120, '24h': 48, '7d': 168 };
+            const maxPoints = pointsMap[range] || 48;
+
+            // 如果数据超过范围，截断显示
+            const displayTempData = tempData.slice(-maxPoints);
+            const displayHumidityData = humidityData.slice(-maxPoints);
+
             drawTemperatureChart();
         }
 
@@ -2049,8 +2097,10 @@
         function togglePath() { }
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('cameraViewfinder')?.addEventListener('click', function(e) { if (e.target === this || e.target.id === 'cameraPlaceholder' || e.target.closest('.camera-placeholder')) startCamera(); });
-            if (currentPage === 'temperature') setTimeout(drawTemperatureChart, 100);
+            if (currentPage === 'temperature') {
+                startTemperatureMonitor();
+                setTimeout(drawTemperatureChart, 100);
+            }
         });
     </script>
 </body>
